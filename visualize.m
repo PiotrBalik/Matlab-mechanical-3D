@@ -65,15 +65,25 @@ for num = 1:figNum
     figure('Name',['Candidate: ' Plots.names{num}])
     hold on
     forces = computeForce(EA,EIy,EIz,GJ,params);
+	displacement=forces.kkk;
+	fprintf('Displacements for candidate %d\nx     y    z',num);
+	fprintf('%3.4G   %3.4G   %3.4G\n',reshape(displacement,[],3));
+	fprintf('---------------\n\n');
+	
+	F=forces.Forces;
+	fprintf('Forces for candidate %d\n',num);
+	fprintf([repmat('%3.4G   ',[1 12])  '\n'],reshape(F,[],12));
+	fprintf('--------------------\n\n');
+	
     magnitude=20; % value to increase the displacement
     for i = 1:length(elementNodes)
         
         %find shift in xy axis, from adress 1+N(i-1),
         %where i is number of node
         %N is a period (2D-two points, 3D-three points)
-        x_shift = magnitude*forces.kkk(1+3*(elementNodes(i,[1 2])-1));
-        y_shift = magnitude*forces.kkk(2+3*(elementNodes(i,[1 2])-1));
-        z_shift = magnitude*forces.kkk(3*elementNodes(i,3));
+        x_shift = magnitude*displacement(1+3*(elementNodes(i,[1 2])-1));
+        y_shift = magnitude*displacement(2+3*(elementNodes(i,[1 2])-1));
+        z_shift = magnitude*displacement(3*elementNodes(i,3));
 %         z_shift=0;
         
         %compute positions
